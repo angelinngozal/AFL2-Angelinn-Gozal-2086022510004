@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Momentum - Focus Mode</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background: #2c2c2c;
+            font-family: Arial, sans-serif;
+        }
+        .sidebar {
+            width: 240px;
+            background: #f2f2f2;
+            padding: 25px;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+        }
+        .logo {
+            font-size: 28px;
+            font-family: 'poppins', sans-serif;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        .logo span {
+            color: #2aa198;
+        }
+        .menu a {
+            display: block;
+            margin-bottom: 18px;
+            color: #444;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .menu a:hover {
+            background-color: #ddd;
+            padding-left: 8px;
+            border-radius: 8px;
+            color: #1a1a1a;
+        }
+        .menu a.active {
+            background-color: #c8c8c8;
+            padding-left: 8px;
+            border-radius: 8px;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+        .settings {
+            position: absolute;
+            bottom: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .settings:hover {
+            background-color: #ddd;
+            padding: 5px 10px;
+            border-radius: 8px;
+            margin-left: -10px;
+        }
+        .main {
+            margin-left: 240px;
+            flex: 1;
+            padding: 20px 30px;
+            background: linear-gradient(#d9d9d9, #9fb7cc);
+            min-height: 100vh;
+        }
+        .topbar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .search {
+            background: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .card-ui {
+            background: #f7f7f7;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        /* Page Title */
+        .page-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #1a1a2e;
+        }
+        
+        /* Focus Mode Card */
+        .music-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1a1a2e;
+            margin-bottom: 4px;
+        }
+        
+        .artist-name {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 30px;
+        }
+        
+        .study-time {
+            font-size: 48px;
+            font-weight: bold;
+            color: #2aa198;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .btn-focus {
+            width: 100%;
+            padding: 12px;
+            background: #2aa198;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-focus:hover {
+            background: #1e7e6b;
+        }
+        
+        .preset-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .preset-btn {
+            background: #e0e0e0;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .preset-btn:hover {
+            background: #ccc;
+        }
+        
+        .progress-bar-bg {
+            background: #e0e0e0;
+            height: 6px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            background: #2aa198;
+            width: 70%;
+            height: 6px;
+            border-radius: 10px;
+        }
+        
+        /* Center the focus card */
+        .focus-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">Mo<span>mentum</span></div>
+        <div class="menu">
+            <a href="index.html">Dashboard</a>
+            <a href="calendar.html">Calendar</a>
+            <a href="habit.html">Habit Tracker</a>
+            <a href="report.html">Report</a>
+            <a href="focus.html" class="active">Focus Mode</a>
+        </div>
+        <div class="settings">Settings</div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+        <div class="topbar">
+            <div class="search">Search...</div>
+            <i class="bi bi-bell"></i>
+            <i class="bi bi-person"></i>
+        </div>
+
+        <div class="page-title">Focus Mode</div>
+
+        <div class="focus-container">
+            <div class="card-ui">
+                <div class="music-name">Music Name</div>
+                <div class="artist-name">Artist Name</div>
+                
+                <div class="study-time">30:00</div>
+                
+                <div class="progress-bar-bg">
+                    <div class="progress-fill"></div>
+                </div>
+                
+                <button class="btn-focus">Start Focus</button>
+                
+                <div class="preset-buttons">
+                    <button class="preset-btn">15m</button>
+                    <button class="preset-btn">30m</button>
+                    <button class="preset-btn">60m</button>
+                    <button class="preset-btn">90m</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

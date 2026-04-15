@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Momentum - Habit Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background: #2c2c2c;
+            font-family: Arial, sans-serif;
+        }
+        .sidebar {
+            width: 240px;
+            background: #f2f2f2;
+            padding: 25px;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+        }
+        .logo {
+            font-size: 28px;
+            font-family: 'poppins', sans-serif;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        .logo span {
+            color: #2aa198;
+        }
+        .menu a {
+            display: block;
+            margin-bottom: 18px;
+            color: #444;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .menu a:hover {
+            background-color: #ddd;
+            padding-left: 8px;
+            border-radius: 8px;
+            color: #1a1a1a;
+        }
+        .menu a.active {
+            background-color: #c8c8c8;
+            padding-left: 8px;
+            border-radius: 8px;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+        .settings {
+            position: absolute;
+            bottom: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .settings:hover {
+            background-color: #ddd;
+            padding: 5px 10px;
+            border-radius: 8px;
+            margin-left: -10px;
+        }
+        .main {
+            margin-left: 240px;
+            flex: 1;
+            padding: 20px 30px;
+            background: linear-gradient(#d9d9d9, #9fb7cc);
+            min-height: 100vh;
+        }
+        .topbar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .search {
+            background: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .card-ui {
+            background: #f7f7f7;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        /* Habit Tracker Specific Styles */
+        .page-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #1a1a2e;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #1a1a2e;
+        }
+        
+        /* Today's Targets */
+        .target-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .target-title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .target-progress {
+            font-size: 12px;
+            color: #2aa198;
+            margin-bottom: 5px;
+        }
+        
+        .progress-bar-bg {
+            background: #e0e0e0;
+            height: 6px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .progress-fill {
+            background: #2aa198;
+            width: 70%;
+            height: 6px;
+            border-radius: 10px;
+        }
+        
+        .target-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn-done {
+            background: #2aa198;
+            color: white;
+            border: none;
+            padding: 5px 18px;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        
+        .btn-done:hover {
+            background: #1e7e6b;
+        }
+        
+        .time-remaining {
+            font-size: 11px;
+            color: #888;
+        }
+        
+        /* Weekly Tracker Table */
+        .weekly-table {
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .weekly-table th {
+            text-align: center;
+            padding: 8px 4px;
+            font-size: 11px;
+            font-weight: normal;
+            color: #888;
+        }
+        
+        .weekly-table td {
+            padding: 8px 4px;
+            font-size: 12px;
+        }
+        
+        .habit-label {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        /* Checkbox styling */
+        .checkbox-group {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .habit-check {
+            display: none;
+        }
+        
+        .habit-check + label {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            cursor: pointer;
+            background: white;
+            transition: all 0.2s;
+        }
+        
+        .habit-check:checked + label {
+            background: #2aa198;
+            border-color: #2aa198;
+            position: relative;
+        }
+        
+        .habit-check:checked + label::after {
+            content: "✓";
+            color: white;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        
+        .habit-check + label:hover {
+            border-color: #2aa198;
+        }
+        
+        /* Stats Cards */
+        .stats-number-large {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2aa198;
+            margin-bottom: 5px;
+        }
+        
+        .stats-label {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        
+        .progress-stats {
+            background: #e0e0e0;
+            height: 6px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        
+        .category-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+        }
+        
+        .category-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .category-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1a1a2e;
+        }
+        
+        .category-name {
+            font-size: 10px;
+            color: #888;
+        }
+        
+        .streak-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #2aa198;
+        }
+        
+        .completed-count {
+            text-align: right;
+            font-size: 12px;
+            color: #2aa198;
+            margin-top: 15px;
+        }
+        
+        .add-habit-link {
+            color: #2aa198;
+            cursor: pointer;
+            font-size: 13px;
+            margin-top: 15px;
+            display: inline-block;
+        }
+        
+        .add-habit-link:hover {
+            text-decoration: underline;
+        }
+        
+        .week-nav {
+            color: #2aa198;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        hr {
+            margin: 15px 0;
+            border-color: #e0e0e0;
+        }
+        
+        .habit-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .habit-list-name {
+            font-size: 13px;
+            color: #333;
+        }
+        
+        .small-checkbox {
+            display: none;
+        }
+        
+        .small-checkbox + label {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            background: white;
+        }
+        
+        .small-checkbox:checked + label {
+            background: #2aa198;
+            border-color: #2aa198;
+        }
+        
+        .small-checkbox:checked + label::after {
+            content: "✓";
+            color: white;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        
+        .row-custom {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .col-left {
+            flex: 1.4;
+        }
+        
+        .col-right {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">Mo<span>mentum</span></div>
+        <div class="menu">
+            <a href="index.html">Dashboard</a>
+            <a href="calendar.html">Calendar</a>
+            <a href="habit.html" class="active">Habit Tracker</a>
+            <a href="report.html">Report</a>
+            <a href="focus.html">Focus Mode</a>
+        </div>
+        <div class="settings">Settings</div>
+    </div>
+
+    <div class="main">
+        <div class="topbar">
+            <div class="search">Search...</div>
+            <i class="bi bi-bell"></i>
+            <i class="bi bi-person"></i>
+        </div>
+
+        <div class="page-title">Habit Tracker</div>
+
+        <div class="row-custom">
+            <!-- LEFT COLUMN -->
+            <div class="col-left">
+                <!-- Today's Targets -->
+                <div class="card-ui">
+                    <div class="section-title">Today's Targets</div>
+                    
+                    <div class="target-item">
+                        <div class="target-title">Study 2 Hours</div>
+                        <div class="target-progress">21/30m</div>
+                        <div class="progress-bar-bg"><div class="progress-fill" style="width: 70%;"></div></div>
+                        <div class="target-actions">
+                            <button class="btn-done">Done</button>
+                            <span class="time-remaining">21m remaining</span>
+                        </div>
+                    </div>
+                    
+                    <div class="target-item">
+                        <div class="target-title">Do Homework</div>
+                        <div class="target-progress">21/30m</div>
+                        <div class="progress-bar-bg"><div class="progress-fill" style="width: 70%;"></div></div>
+                        <div class="target-actions">
+                            <button class="btn-done">Done</button>
+                            <span class="time-remaining">21m remaining</span>
+                        </div>
+                    </div>
+                    
+                    <div class="target-item">
+                        <div class="target-title">Exercise 30m</div>
+                        <div class="target-progress">21/30m</div>
+                        <div class="progress-bar-bg"><div class="progress-fill" style="width: 70%;"></div></div>
+                        <div class="target-actions">
+                            <button class="btn-done">Done</button>
+                            <span class="time-remaining">21m remaining</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Weekly Tracker -->
+                <div class="card-ui">
+                    <div class="section-title">Weekly Tracker</div>
+                    
+                    <table class="weekly-table">
+                        <thead>
+                            <tr><th></th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="habit-label">Study 2 hours</td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="s_mon" class="habit-check" checked><label for="s_mon"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="s_tue" class="habit-check" checked><label for="s_tue"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="s_wed" class="habit-check" checked><label for="s_wed"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="s_thu" class="habit-check" checked><label for="s_thu"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="s_fri" class="habit-check" checked><label for="s_fri"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="s_sat" class="habit-check" checked><label for="s_sat"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="s_sun" class="habit-check" checked><label for="s_sun"></label></div></td>
+                            </tr>
+                            <tr><td class="habit-label">Do Homework</td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="h_mon" class="habit-check" checked><label for="h_mon"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="h_tue" class="habit-check" checked><label for="h_tue"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="h_wed" class="habit-check" checked><label for="h_wed"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="h_thu" class="habit-check" checked><label for="h_thu"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="h_fri" class="habit-check" checked><label for="h_fri"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="h_sat" class="habit-check" checked><label for="h_sat"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="h_sun" class="habit-check"><label for="h_sun"></label></div></td>
+                            </tr>
+                            <tr><td class="habit-label">Exercise 30m</td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="e_mon" class="habit-check" checked><label for="e_mon"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="e_tue" class="habit-check" checked><label for="e_tue"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="e_wed" class="habit-check" checked><label for="e_wed"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="e_thu" class="habit-check" checked><label for="e_thu"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="e_fri" class="habit-check" checked><label for="e_fri"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="e_sat" class="habit-check" checked><label for="e_sat"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="e_sun" class="habit-check" checked><label for="e_sun"></label></div></td>
+                            </tr>
+                            <tr><td class="habit-label">Meditate 15m</td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="m_mon" class="habit-check" checked><label for="m_mon"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="m_tue" class="habit-check" checked><label for="m_tue"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="m_wed" class="habit-check" checked><label for="m_wed"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="m_thu" class="habit-check" checked><label for="m_thu"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="m_fri" class="habit-check" checked><label for="m_fri"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="m_sat" class="habit-check"><label for="m_sat"></label></div></td>
+                                <td><div class="checkbox-group"><input type="checkbox" id="m_sun" class="habit-check"><label for="m_sun"></label></div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="add-habit-link">+ Add Habit</div>
+                </div>
+            </div>
+            
+            <!-- RIGHT COLUMN -->
+            <div class="col-right">
+                <!-- Stats Card -->
+                <div class="card-ui">
+                    <div class="stats-header">
+                        <span class="section-title" style="margin-bottom:0;">This Sunday</span>
+                        <span class="week-nav">20 - 27 Maret 2026 ></span>
+                    </div>
+                    
+                    <div class="stats-number-large">22</div>
+                    <div class="stats-label">Current Streak</div>
+                    
+                    <div class="progress-stats"><div class="progress-fill" style="width: 70%;"></div></div>
+                    
+                    <div class="stats-header">
+                        <span class="section-title" style="margin-bottom:0; font-size:14px;">Weekly Progress</span>
+                        <span class="week-nav">Consistency 80%</span>
+                    </div>
+                    
+                    <div class="progress-stats"><div class="progress-fill" style="width: 80%;"></div></div>
+                    
+                    <div class="category-row">
+                        <div class="category-item"><div class="category-number">22</div><div class="category-name">Education</div></div>
+                        <div class="category-item"><div class="category-number">15</div><div class="category-name">Health</div></div>
+                        <div class="category-item"><div class="category-number">8</div><div class="category-name">Personal</div></div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="stats-header">
+                        <span class="section-title" style="margin-bottom:0; font-size:14px;">Current Streak</span>
+                        <span class="week-nav">Monthly Total</span>
+                    </div>
+                    
+                    <div class="streak-number">5 days</div>
+                    
+                    <div class="category-row">
+                        <div class="category-item"><div class="category-number">22</div><div class="category-name">Education</div></div>
+                        <div class="category-item"><div class="category-number">15</div><div class="category-name">Health</div></div>
+                        <div class="category-item"><div class="category-number">8</div><div class="category-name">Personal</div></div>
+                    </div>
+                    
+                    <div class="completed-count">22 Completed</div>
+                </div>
+                
+                <!-- Habit List -->
+                <div class="card-ui">
+                    <div class="stats-header">
+                        <span class="section-title" style="margin-bottom:0;">Habit List</span>
+                        <span class="week-nav">+ Add</span>
+                    </div>
+                    
+                    <div class="habit-list-item">
+                        <span class="habit-list-name">Study 2 hours</span>
+                        <div><input type="checkbox" id="list1" class="small-checkbox" checked><label for="list1"></label></div>
+                    </div>
+                    <div class="habit-list-item">
+                        <span class="habit-list-name">Do Homework</span>
+                        <div><input type="checkbox" id="list2" class="small-checkbox" checked><label for="list2"></label></div>
+                    </div>
+                    <div class="habit-list-item">
+                        <span class="habit-list-name">Exercise 30m</span>
+                        <div><input type="checkbox" id="list3" class="small-checkbox" checked><label for="list3"></label></div>
+                    </div>
+                    <div class="habit-list-item">
+                        <span class="habit-list-name">Meditate 15m</span>
+                        <div><input type="checkbox" id="list4" class="small-checkbox"><label for="list4"></label></div>
+                    </div>
+                    <div class="habit-list-item">
+                        <span class="habit-list-name">Read Book</span>
+                        <div><input type="checkbox" id="list5" class="small-checkbox"><label for="list5"></label></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
